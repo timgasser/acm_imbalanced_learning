@@ -79,12 +79,12 @@ def SMOTEoversample(X, y):
     ratio = (num_maj / num_min) - 1 # Amount of times to copy minority examples
     k = 5 # nearest neighbours to choose from
     
-    # Generate matrix of 2-norms for the minority class examples
-    knn_dist = np.zeros((num_min, num_min))
+    # Generate matrix of 2-norms. Rows = minority, Cols = all samples
+    knn_dist = np.zeros((num_min, num_all))
     for X_min_idx, X_min_val in enumerate(X_min):
-        for X_min2_idx, X_min2_val in enumerate(X_min):
-            knn_dist[X_min_idx, X_min2_idx] = np.sqrt(
-            np.sum(np.square(X_min_val - X_min2_val)))
+        for X_all_idx, X_all_val in enumerate(X):
+            knn_dist[X_min_idx, X_all_idx] = np.sqrt(
+            np.sum(np.square(X_min_val - X_all_val)))
             
     # Now find the k-nearest neighbours by sorting across rows
     # and taking the first [1:k+1] entries. Entry [0] will be 0 as the minority 
@@ -96,7 +96,7 @@ def SMOTEoversample(X, y):
     X_smote = np.zeros((num_min * ratio, X.shape[-1]))
     for smote_run in xrange(ratio):
         for X_min_idx, X_min_val in enumerate(X_min):
-            a = X_min[knn_idx[X_min_idx, np.random.randint(k)]]
+            a = X[knn_idx[X_min_idx, np.random.randint(k)]]
             c = np.random.uniform()
             new_smote = X_min_val + (c * (a - X_min_val))
     #         print 'x_min_val = {}, a = {}, c = {}, new_smote = {}'.
@@ -110,6 +110,19 @@ def SMOTEoversample(X, y):
 
     return (x_smote_out, y_smote_out)
 
+
+def TomekUndersample(X, y):
+    """
+    Undersamples majority examples found in Tomek links
+    
+    Inputs
+    - X: A pandas dataframe containing the dataset
+    - y: The target variable.
+    
+    Returns
+    - X: Dataset with majority examples in Tomek pairs removed
+    - y: Undersampled target variable
+    """
 
 
 
