@@ -14,7 +14,7 @@ The files in the repo are listed below, with an explanation of what they're used
   * ```cs-training.csv``` - Training data from the Kaggle 'Can I get some credit' competition
   * ```cs-test.csv``` - Test data from the Kaggle competition.
   * ```sampleEntry.csv``` - Sample entry format for the Kagle competition.
-  * ```cs-training-{CNN, OSS, smote, tomek}.csv``` - Processed training data (generted from ```acm_imbalanced_dataset.R```) using the algorithms in the name.
+  * ```cs-training-{CNN, OSS, smote, tomek}.csv``` - Processed training data (generated from ```acm_imbalanced_dataset.R```) using the algorithms in the filename.
 
 ## Feedback
 
