@@ -1,6 +1,6 @@
 # acm_imbalanced_learning
 
-This repo contains slides and code for the ACM Imbalanced Learning talk on 27th April 2016 in Austin, TX. 
+This repo contains slides and code for the [ACM Imbalanced Learning talk](http://www.meetup.com/Austin-ACM-SIGKDD/events/230200840/) on 27th April 2016 in Austin, TX. 
 
 ## File listing
 
