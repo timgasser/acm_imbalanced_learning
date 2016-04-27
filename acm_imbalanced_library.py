@@ -1,5 +1,52 @@
 import numpy as np
 
+def cleanCreditDf(credit_df):
+    # Clean up the column names so it fits on one page width !
+    credit_df.columns = ['ID', 'target', 'revolving_pct', 'age', 
+                        'past_due_30_59', 'debt_ratio', 
+                        'monthly_income', 'lines', 
+                        'past_due_gt_90', 'mortgages', 
+                        'past_due_60_89', 'dependents']
+    
+    # Replace missing values with 0 
+    # (quick-n-dirty ! Should try imputation or reserved value for trees)
+    credit_df[credit_df.isnull()] = 0
+    
+    # Convert dependents to an integer
+    credit_df['dependents'] = credit_df['dependents'].astype('int64')
+
+    return credit_df
+
+def cleanRProcessedCreditDf(credit_df):
+    # Clean up the column names so it fits on one page width !
+    credit_df.columns = ["ID", "revolving_pct", "age", "past_due_30_59",
+                         "debt_ratio", "monthly_income", "lines",
+                         "past_due_gt_90", "mortgages", "past_due_60_89",
+                         "dependents", "target"]
+    
+    # Replace missing values with 0 
+    # (quick-n-dirty ! Should try imputation or reserved value for trees)
+    credit_df[credit_df.isnull()] = 0
+    
+    # Convert dependents to an integer
+    credit_df['dependents'] = credit_df['dependents'].astype('int64')
+
+    return credit_df
+
+
+def removeIDTargetFromCreditDf(credit_df):
+    """ 
+    returns a tuple of X, y, and id_val from pandas dataframe
+    """
+    y = credit_df['target']
+    id_val = credit_df['ID']
+    credit_df = credit_df.drop(['target'], axis=1)
+    credit_df = credit_df.drop(['ID'], axis=1)
+    X = credit_df
+
+    return X, y, id_val
+
+
 def randomOversample(X, y):
     """
     Randomly oversamples the minority class (y == 1)
@@ -45,6 +92,9 @@ def randomUndersample(X, y):
     X_maj = X[y == 0]
     num_min = X_min.shape[0]
     num_maj = X_maj.shape[0]
+    
+    print 'num_min = {}, num_maj = {}'.format(num_min, num_maj)
+    
     X_maj_idx = np.random.randint(num_maj, size=num_min)
     X_maj_undersamp = X_maj[X_maj_idx]
     

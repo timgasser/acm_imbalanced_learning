@@ -88,6 +88,6 @@ credit.df$target <- credit.target
 
 ubConf <- list(percOver=200, percUnder=200, k=2, perc=50, method="percPos", w=NULL)
 ubResults <- ubRacing(target ~ ., data=credit.df, algo='glmnet', positive=1, ubConf = ubConf, ncore=7, 
-                      nFold=10, maxFold=10, maxExp=100, stat.test="friedman", metric="auc", verbose=TRUE)
+                      nFold=10, maxFold=10, maxExp=1000, stat.test="friedman", metric="auc", verbose=TRUE)
 
 
