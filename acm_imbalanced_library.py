@@ -173,6 +173,67 @@ def TomekUndersample(X, y):
     - X: Dataset with majority examples in Tomek pairs removed
     - y: Undersampled target variable
     """
+    # Split data into minority and majority example arrays
+    X_min = X[y == 1]
+    X_maj = X[y == 0]
+    num_all = X.shape[0]
+    num_min = X_min.shape[0]
+    num_maj = X_maj.shape[0]
+    
+    # Generate matrix of 2-norms between minority and majority .
+    # Rows are minority indexes, columns are majority
+    knn_dist = np.zeros((num_all, num_all))
+    for a_idx, a_val in enumerate(X):
+        for b_idx, b_val in enumerate(X):
+            knn_dist[a_idx, b_idx] = np.sqrt(np.sum(np.square(a_val - b_val)))
+    
+            
+    tomek_pairs = []
+    
+    for idx in range(num_all):
+    #     print 'Examining point {}'.format(idx)
+        
+        maj_idx = None
+        min_idx = None
+        
+        # Skip majority points 
+        if y[idx] == 0:
+            continue
+    
+        # Find closest point to minority, check if it's a majority
+        dist_min_idx = np.argsort(knn_dist[idx,:])
+        assert(dist_min_idx[0] == idx) 
+        closest_idx = dist_min_idx[1]
+        if (y[closest_idx] == 0):
+            #print 'Found closest majority point = {}'.format(closest_idx)
+            maj_idx = closest_idx
+        else:
+            continue
+    
+        # Now check the closest point to majority example is the minority one
+        dist_maj_idx = np.argsort(knn_dist[maj_idx,:])
+        assert(dist_maj_idx[0] == maj_idx)
+        closest_idx = dist_maj_idx[1]
+        if (y[closest_idx] == 1):
+            #print 'Found closest minority point = {}'.format(closest_idx)
+            min_idx = closest_idx
+    
+        if (min_idx != None and maj_idx != None):
+            #print 'Found Tomek pair at indexes {} and {}'.format(min_idx, maj_idx)
+            tomek_pairs.append((min_idx, maj_idx))
+        
+    #print 'Found Tomek links (min,maj) = {}'.format(tomek_pairs)    
+    
+    # Now remove the majority examples in the Tomek links
+    remove_list = []
+    for pair in tomek_pairs:
+        remove_list.append(pair[1])
+        
+    X_tomek = np.delete(X, remove_list, 0)
+    y_tomek = np.delete(y, remove_list, 0)
+    
+    return (X_tomek, y_tomek)
+
 
 
 
